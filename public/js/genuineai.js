@@ -1,4 +1,6 @@
-async function runGenuineAI() {
+let didGenuineAISucceed = false
+
+async function runGenuineAI(firstTime = true) {
 	let GENUINEAI_API_URL = "https://genuine-ai-api.adaptable.app"
 
 	let url = `${GENUINEAI_API_URL}/genuineai`
@@ -13,16 +15,19 @@ async function runGenuineAI() {
 	try {
 		let request = await fetch(url, options)
 		let response = await request.json()
-		renderGenuineAIComponent(response)
+		renderGenuineAIComponent(response, firstTime)
 	} catch (error) {
 		console.log(error)
 		renderGenuineAIComponent({
 			errorMessage: "Something went wrong, please try again later.",
-		})
+		}, firstTime)
 	}
 }
 
-function renderGenuineAIComponent(response) {
+function renderGenuineAIComponent(response, firstTime = true) {
+
+	console.log(response)
+	console.log(response.message)
 
 	let existingHTML = document.querySelector(".mainSectionContainer").innerHTML
 
@@ -31,24 +36,38 @@ function renderGenuineAIComponent(response) {
 	if(response.errorMessage) {
 		html = `
 			<div class="genuineai__container">
-				<div class="genuineai__container__header">
+				<div class="genuineai__container__header genuineAIStatusMessage">
 					<h1>${response.errorMessage}</h1>
 				</div>
 			</div>
 		`
-		document.querySelector(".mainSectionContainer").innerHTML = existingHTML + html
+		firstTime ? document.querySelector(".mainSectionContainer").innerHTML = existingHTML + html : null
+
+		setTimeout(() => {
+			if(!didGenuineAISucceed) {
+				runGenuineAI(false)
+			}
+		}, 3000)
+
 		return
 	}
 
-	if(response.status == "pending") {
+	if(response.status == "pending" || response.message != undefined) {
 		html = `
 			<div class="genuineai__container">
-				<div class="genuineai__container__header">
+				<div class="genuineai__container__header genuineAIStatusMessage">
 					<h1>Request Sent to GenuineAI. Please wait upto 30 seconds.</h1>
 				</div>
 			</div>
 		`
-		document.querySelector(".mainSectionContainer").innerHTML = existingHTML + html
+		firstTime ? document.querySelector(".mainSectionContainer").innerHTML = existingHTML + html : null
+
+		setTimeout(() => {
+			if(!didGenuineAISucceed) {
+				runGenuineAI(false)
+			}
+		}, 3000)
+
 		return
 	}
 	
@@ -89,6 +108,10 @@ function renderGenuineAIComponent(response) {
 	`
 
 	document.querySelector(".mainSectionContainer").innerHTML = existingHTML + html
+
+	document.querySelector(".genuineAIStatusMessage").remove()
+
+	didGenuineAISucceed = true
 
 }
 
