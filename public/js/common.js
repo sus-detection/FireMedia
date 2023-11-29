@@ -471,6 +471,14 @@ $(document).on("click", ".retweetButton", (event) => {
 	});
 });
 
+$(document).on("click", ".genuineAIButton", (event) => {
+	var button = $(event.target);
+	var postId = getPostIdFromElement(button);
+	if (postId === undefined) return;
+
+	window.location.href = `/genuineai/${postId}`;
+});
+
 $(document).on("click", ".shareButton", async (event) => {
 	var element = $(event.target);
 	var postId = getPostIdFromElement(element);
@@ -710,6 +718,12 @@ const createPostHtml = (postData, largeFont = false) => {
                                 <button aria-label='like'  style='outline: none;' class='likeButton ${likeButtonActiveClass}'>
                                     <i class="fal fa-heart"></i>
 									<span>${postData.likes.length || ""}</span>
+                                </button>
+                            </div>
+
+							<div class='postButtonContainer'>
+                                <button aria-label='like' style='outline: none;' class='genuineAIButton'>
+								✨
                                 </button>
                             </div>
 
