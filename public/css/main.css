@@ -1092,6 +1092,23 @@ ul {
     border-radius: 1rem;
 }
 
+.genuineai__container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 15px;
+}
+
+.genuineai__container h1 {
+	padding: 0.6rem 0px;
+}
+
+.genuineai__container__relatedImages__content {
+	display: flex;
+	flex-wrap: wrap;
+}
+
 
 
 /* Media queries */
